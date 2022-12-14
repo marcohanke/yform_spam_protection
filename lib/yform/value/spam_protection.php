@@ -17,7 +17,7 @@ class rex_yform_value_spam_protection extends rex_yform_value_abstract
 
         $ip_whitelist = [];
         $config_ip_whitelist = rex_config::get('yform_spam_protection', 'ip_whitelist');
-        if ($config_ip_whitelist !== ''){
+        if (!is_null($config_ip_whitelist)){
             $ip_whitelist = explode(',', $config_ip_whitelist);
         }
 
@@ -71,8 +71,7 @@ class rex_yform_value_spam_protection extends rex_yform_value_abstract
                         $log[] = "formular-microtime eingehalten: $form_timestamp + " . rex_config::get('yform_spam_protection',
                                 'timer_form') . " > " . microtime(true);
                     }
-					
-					if (trim(rex_config::get('yform_spam_protection', 'use_stopforumspam'), '|')) {
+					if (trim((string)rex_config::get('yform_spam_protection', 'use_stopforumspam'), '|')) {
 						$result = file_get_contents('http://api.stopforumspam.org/api?ip='.$_SERVER['REMOTE_ADDR']);
 						if ($result) {
 							$doc = new DOMDocument();
@@ -85,7 +84,7 @@ class rex_yform_value_spam_protection extends rex_yform_value_abstract
 							}
 						}
 					}
-					
+
                 }
             } else {
                 $log[] = 'IP was white-listed';
